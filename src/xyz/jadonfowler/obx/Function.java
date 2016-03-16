@@ -1,6 +1,7 @@
 package xyz.jadonfowler.obx;
 
 import java.util.*;
+import xyz.jadonfowler.obx.operator.*;
 
 public class Function {
     static HashMap<Character, Function> functions = new HashMap<Character, Function>();
@@ -95,7 +96,12 @@ public class Function {
         else if (c == 'z') {
             stack.push(z);
         }
-        else if (c == '+') {}
+        else {
+            Operator op = Obx.getOperators().get(c);
+            if (op.getArgAmount() == Operator.ArgAmount.ONE) op.run(stack.pop());
+            else if (op.getArgAmount() == Operator.ArgAmount.TWO) op.run(stack.pop(), stack.pop());
+            else if (op.getArgAmount() == Operator.ArgAmount.THREE) op.run(stack.pop(), stack.pop(), stack.pop());
+        }
         // System.out.println(c + " " + next + " " + s);
     }
 }

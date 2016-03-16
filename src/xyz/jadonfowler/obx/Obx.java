@@ -2,8 +2,10 @@ package xyz.jadonfowler.obx;
 
 import java.io.*;
 import java.util.*;
+import xyz.jadonfowler.obx.operator.*;
 
 public class Obx {
+    private static HashMap<Character, Operator> operators = new HashMap<Character, Operator>();
     private static Obx instance;
 
     public static void main(String[] args) {
@@ -31,6 +33,10 @@ public class Obx {
 
     public static Obx getInstance() {
         return instance;
+    }
+
+    public static HashMap<Character, Operator> getOperators() {
+        return operators;
     }
 
     public String runFile(String fileName, String[] args) {
