@@ -28,4 +28,8 @@ public class Stack {
         return this;
     }
     
+    public String toString() {
+        return stack.toString();
+    }
+    
 }

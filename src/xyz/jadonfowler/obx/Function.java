@@ -3,9 +3,7 @@ package xyz.jadonfowler.obx;
 import java.util.*;
 
 public class Function {
-    
     static HashMap<Character, Function> functions = new HashMap<Character, Function>();
-    
     char id;
     String line;
     Stack stack;
@@ -13,14 +11,18 @@ public class Function {
     public Function(String line) {
         this.line = line;
         this.stack = new Stack();
-        char id = (char) ('A'+functions.keySet().size()-1);
+        char id = (char) ('A' + functions.keySet().size() - 1);
         functions.put(id, this);
     }
-    
+
     public static HashMap<Character, Function> getFunctions() {
         return functions;
     }
-    
+
+    public Stack getStack() {
+        return stack;
+    }
+
     public String toString() {
         return line;
     }
@@ -41,10 +43,10 @@ public class Function {
         for (char c : new StringBuffer().append(line).reverse().toString().toCharArray()) {
             parse(c, x, y, z);
         }
-        return null;
+        return stack.pop();
     }
-    
-    //flags
+
+    // flags
     private boolean inString = false;
     private boolean number = false;
     private StringBuffer buffer;
@@ -56,19 +58,20 @@ public class Function {
                 buffer.append(c);
             }
             else {
-                //push number to stack after reversing it
+                // push number to stack after reversing it
                 double id = Double.parseDouble(buffer.reverse().toString());
                 stack.push(id);
                 number = false;
-                //redo parse now that the number has finished
+                // redo parse now that the number has finished
                 parse(c, x, y, z);
             }
         }
         else if (inString && !number) {
-            if(c == '"') {
+            if (c == '"') {
                 stack.push(buffer.reverse().toString());
                 inString = false;
-            } else {
+            }
+            else {
                 buffer.append(c);
             }
         }
@@ -81,13 +84,13 @@ public class Function {
             inString = true;
             buffer = new StringBuffer();
         }
-        else if(c == 'x') {
+        else if (c == 'x') {
             stack.push(x);
         }
-        else if(c == 'y') {
+        else if (c == 'y') {
             stack.push(y);
         }
-        else if(c == 'z') {
+        else if (c == 'z') {
             stack.push(z);
         }
     }
