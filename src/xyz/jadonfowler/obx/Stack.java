@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Stack {
     
-    private ArrayList<Object> stack = new ArrayList<Object>();
+    public ArrayList<Object> stack = new ArrayList<Object>();
     
     public Stack push(Object o) {
         assert o != null : "Object pushed to stack " + this.hashCode() + " was null";
@@ -20,12 +20,16 @@ public class Stack {
     }
     
     public Object get(int i) {
-        return stack.get(i);
+        return stack.size() < i ? stack.get(i) : null;
     }
     
     public Stack set(int i, Object o) {
         stack.set(i, o);
         return this;
+    }
+    
+    public int last() {
+        return stack.size()-1;
     }
     
     public String toString() {

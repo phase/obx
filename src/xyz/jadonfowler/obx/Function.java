@@ -11,7 +11,7 @@ public class Function {
     public Function(String line) {
         this.line = line;
         this.stack = new Stack();
-        char id = (char) ('A' + functions.keySet().size() - 1);
+        this.id = (char) ('A' + functions.size());
         functions.put(id, this);
     }
 
@@ -40,8 +40,9 @@ public class Function {
      * @return
      */
     public Object run(Object x, Object y, Object z) {
-        for (char c : new StringBuffer().append(line).reverse().toString().toCharArray()) {
-            parse(c, x, y, z);
+        char[] chars = new StringBuffer().append(line).reverse().toString().toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            parse(chars[i], i + 1 < chars.length ? chars[i + 1] : (char) 0, x, y, z);
         }
         return stack.pop();
     }
@@ -51,19 +52,14 @@ public class Function {
     private boolean number = false;
     private StringBuffer buffer;
 
-    public void parse(char c, Object x, Object y, Object z) {
+    public void parse(char c, char next, Object x, Object y, Object z) {
         String s = String.valueOf(c);
         if (number && !inString) {
-            if (s.matches("0-9") || c == '.') {
-                buffer.append(c);
-            }
-            else {
-                // push number to stack after reversing it
+            buffer.append(c);
+            if (!(String.valueOf(next).matches("[0-9]") || next == '.')) {
                 double id = Double.parseDouble(buffer.reverse().toString());
                 stack.push(id);
                 number = false;
-                // redo parse now that the number has finished
-                parse(c, x, y, z);
             }
         }
         else if (inString && !number) {
@@ -75,7 +71,7 @@ public class Function {
                 buffer.append(c);
             }
         }
-        else if (s.matches("0-9")) {
+        else if (s.matches("[0-9]")) {
             number = true;
             buffer = new StringBuffer();
             buffer.append(c);
@@ -83,6 +79,12 @@ public class Function {
         else if (c == '"') {
             inString = true;
             buffer = new StringBuffer();
+        }
+        else if (s.matches("[A-Z]")) {
+            Object nx = stack.stack.size() > 0 ? stack.get(0) : null;
+            Object ny = stack.stack.size() > 1 ? stack.get(1) : null;
+            Object nz = stack.stack.size() > 2 ? stack.get(2) : null;
+            stack.push(functions.get(c).run(nx, ny, nz));
         }
         else if (c == 'x') {
             stack.push(x);
@@ -93,5 +95,7 @@ public class Function {
         else if (c == 'z') {
             stack.push(z);
         }
+        else if (c == '+') {}
+        // System.out.println(c + " " + next + " " + s);
     }
 }

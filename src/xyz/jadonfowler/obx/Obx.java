@@ -21,9 +21,9 @@ public class Obx {
             while ((line = in.nextLine()) != null) {
                 if (line.trim().equals("")) break;
                 Function f = new Function(line);
-                //TODO: Replace with something else
+                // TODO: Replace with something else
                 String result = f.run(0, 1, 2).toString();
-                System.out.println(result + "\n" + f.getStack().toString());
+                System.out.println(result + "\n" + f.id + "(0,1,2): " + result + " " + f.getStack().toString());
             }
             in.close();
         }
