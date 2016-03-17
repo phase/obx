@@ -1,4 +1,4 @@
-# Obx
+# obx
 Functional prefix programming language for golf or math or anything you want.
 
 ## Short Explanation

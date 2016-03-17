@@ -2,6 +2,7 @@ package xyz.jadonfowler.obx;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.*;
 import xyz.jadonfowler.obx.operator.*;
 
 public class Obx {
@@ -56,9 +57,9 @@ public class Obx {
             }
             reader.close();
             int functionSize = Function.getFunctions().size();
-            Object x = args.length > 1 ? args[1] : null;
-            Object y = args.length > 2 ? args[2] : null;
-            Object z = args.length > 3 ? args[3] : null;
+            Object x = args.length > 1 ? isDouble(args[1]) ? Double.parseDouble(args[1]) : args[1] : null;
+            Object y = args.length > 2 ? isDouble(args[2]) ? Double.parseDouble(args[2]) : args[2] : null;
+            Object z = args.length > 3 ? isDouble(args[3]) ? Double.parseDouble(args[3]) : args[3] : null;
             Function lastFunction = Function.getFunctions().get((char) ('A' + functionSize - 1));
             Object o = lastFunction.run(x, y, z);
             return o.toString();
@@ -67,5 +68,15 @@ public class Obx {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static final Pattern DOUBLE_PATTERN = Pattern
+            .compile("[\\x00-\\x20]*[+-]?(NaN|Infinity|((((\\p{Digit}+)(\\.)?((\\p{Digit}+)?)"
+                    + "([eE][+-]?(\\p{Digit}+))?)|(\\.((\\p{Digit}+))([eE][+-]?(\\p{Digit}+))?)|"
+                    + "(((0[xX](\\p{XDigit}+)(\\.)?)|(0[xX](\\p{XDigit}+)?(\\.)(\\p{XDigit}+)))"
+                    + "[pP][+-]?(\\p{Digit}+)))[fFdD]?))[\\x00-\\x20]*");
+
+    public static boolean isDouble(String s) {
+        return DOUBLE_PATTERN.matcher(s).matches();
     }
 }
