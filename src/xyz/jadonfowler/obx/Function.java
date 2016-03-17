@@ -1,7 +1,6 @@
 package xyz.jadonfowler.obx;
 
 import java.util.*;
-import xyz.jadonfowler.obx.operator.*;
 
 public class Function {
     static HashMap<Character, Function> functions = new HashMap<Character, Function>();
@@ -11,7 +10,6 @@ public class Function {
 
     public Function(String line) {
         this.line = line;
-        this.stack = new Stack();
         this.id = (char) ('A' + functions.size());
         functions.put(id, this);
     }
@@ -41,6 +39,7 @@ public class Function {
      * @return
      */
     public Object run(Object x, Object y, Object z) {
+        stack = new Stack();
         char[] chars = new StringBuffer().append(line).reverse().toString().toCharArray();
         for (int i = 0; i < chars.length; i++) {
             parse(chars[i], i + 1 < chars.length ? chars[i + 1] : (char) 0, x, y, z);
@@ -76,15 +75,20 @@ public class Function {
             number = true;
             buffer = new StringBuffer();
             buffer.append(c);
+            if (!(String.valueOf(next).matches("[0-9]") || next == '.')) {
+                double id = Double.parseDouble(buffer.reverse().toString());
+                stack.push(id);
+                number = false;
+            }
         }
         else if (c == '"') {
             inString = true;
             buffer = new StringBuffer();
         }
         else if (s.matches("[A-Z]")) {
-            Object nx = stack.stack.size() > 0 ? stack.get(0) : null;
-            Object ny = stack.stack.size() > 1 ? stack.get(1) : null;
-            Object nz = stack.stack.size() > 2 ? stack.get(2) : null;
+            Object nx = stack.stack.size() > 0 ? stack.pop() : null;
+            Object ny = stack.stack.size() > 0 ? stack.pop() : null;
+            Object nz = stack.stack.size() > 0 ? stack.pop() : null;
             stack.push(functions.get(c).run(nx, ny, nz));
         }
         else if (c == 'x') {
@@ -97,11 +101,15 @@ public class Function {
             stack.push(z);
         }
         else {
-            Operator op = Obx.getOperators().get(c);
-            if (op.getArgAmount() == Operator.ArgAmount.ONE) op.run(stack.pop());
-            else if (op.getArgAmount() == Operator.ArgAmount.TWO) op.run(stack.pop(), stack.pop());
-            else if (op.getArgAmount() == Operator.ArgAmount.THREE) op.run(stack.pop(), stack.pop(), stack.pop());
+            if (Obx.getOperators().keySet().contains(c)) {
+                Operator op = Obx.getOperators().get(c);
+                if (op.getArgAmount() == Operator.ArgAmount.ONE) stack.push(op.run(stack.pop()));
+                else if (op.getArgAmount() == Operator.ArgAmount.TWO) stack.push(op.run(stack.pop(), stack.pop()));
+                else if (op.getArgAmount() == Operator.ArgAmount.THREE)
+                    stack.push(op.run(stack.pop(), stack.pop(), stack.pop()));
+            }
         }
-        // System.out.println(c + " " + next + " " + s);
+        // Pretty awesome debug statement
+        //System.out.println(c + " " + next + " " + (buffer == null ? " " : buffer.toString()) + " " + stack.toString());
     }
 }

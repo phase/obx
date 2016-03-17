@@ -9,7 +9,7 @@ public abstract class Operator {
 
     public abstract Object run(Object x);
 
-    static enum ArgAmount {
+    public static enum ArgAmount {
         ONE(1), TWO(2), THREE(3);
         int args;
 

@@ -5,7 +5,13 @@ import java.util.*;
 import xyz.jadonfowler.obx.operator.*;
 
 public class Obx {
-    private static HashMap<Character, Operator> operators = new HashMap<Character, Operator>();
+    private static HashMap<Character, Operator> operators;
+
+    static {
+        operators = new HashMap<Character, Operator>();
+        operators.put('+', new PlusOperator());
+    }
+
     private static Obx instance;
 
     public static void main(String[] args) {
@@ -24,7 +30,7 @@ public class Obx {
                 if (line.trim().equals("")) break;
                 Function f = new Function(line);
                 // TODO: Replace with something else
-                String result = f.run(0, 1, 2).toString();
+                String result = f.run(0d, 1d, 2d).toString();
                 System.out.println(result + "\n" + f.id + "(0,1,2): " + result + " " + f.getStack().toString());
             }
             in.close();
