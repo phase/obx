@@ -103,13 +103,13 @@ public class Function {
         else {
             if (Obx.getOperators().keySet().contains(c)) {
                 Operator op = Obx.getOperators().get(c);
-                if (op.getArgAmount() == Operator.ArgAmount.ONE) stack.push(op.run(stack.pop()));
-                else if (op.getArgAmount() == Operator.ArgAmount.TWO) stack.push(op.run(stack.pop(), stack.pop()));
-                else if (op.getArgAmount() == Operator.ArgAmount.THREE)
-                    stack.push(op.run(stack.pop(), stack.pop(), stack.pop()));
+                if (op.getArgAmount().handlesOne()) stack.push(op.run(stack.pop()));
+                else if (op.getArgAmount().handlesTwo()) stack.push(op.run(stack.pop(), stack.pop()));
+                else if (op.getArgAmount().handlesThree()) stack.push(op.run(stack.pop(), stack.pop(), stack.pop()));
             }
         }
         // Pretty awesome debug statement
-        //System.out.println(c + " " + next + " " + (buffer == null ? " " : buffer.toString()) + " " + stack.toString());
+        // System.out.println(c + " " + next + " " + (buffer == null ? " " :
+        // buffer.toString()) + " " + stack.toString());
     }
 }

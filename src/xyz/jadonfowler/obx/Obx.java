@@ -10,6 +10,7 @@ public class Obx {
     static {
         operators = new HashMap<Character, Operator>();
         operators.put('+', new PlusOperator());
+        operators.put('-', new MinusOperator());
     }
 
     private static Obx instance;
