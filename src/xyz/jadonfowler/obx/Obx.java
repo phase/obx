@@ -32,7 +32,8 @@ public class Obx {
                 if (line.trim().equals("")) break;
                 Function f = new Function(line);
                 // TODO: Replace with something else
-                String result = f.run(0d, 1d, 2d).toString();
+                Object o = f.run(0d, 1d, 2d);
+                String result = o instanceof Double ? doubleToString((double) o) : o.toString();
                 System.out.println(result + "\n" + f.id + "(0,1,2): " + result + " " + f.getStack().toString());
             }
             in.close();
@@ -62,7 +63,7 @@ public class Obx {
             Object z = args.length > 3 ? isDouble(args[3]) ? Double.parseDouble(args[3]) : args[3] : null;
             Function lastFunction = Function.getFunctions().get((char) ('A' + functionSize - 1));
             Object o = lastFunction.run(x, y, z);
-            return o.toString();
+            return o instanceof Double ? doubleToString((double) o) : o.toString();
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -78,5 +79,9 @@ public class Obx {
 
     public static boolean isDouble(String s) {
         return DOUBLE_PATTERN.matcher(s).matches();
+    }
+
+    public static String doubleToString(double d) {
+        return ((int) d) == d ? (d + "").split(".0")[0] : d + "";
     }
 }
