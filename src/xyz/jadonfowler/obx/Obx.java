@@ -12,6 +12,8 @@ public class Obx {
         operators = new HashMap<Character, Operator>();
         operators.put('+', new PlusOperator());
         operators.put('-', new MinusOperator());
+        operators.put('*', new StarOperator());
+        operators.put('/', new ForwardSlashOperator());
     }
 
     private static Obx instance;
